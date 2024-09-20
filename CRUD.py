@@ -41,6 +41,7 @@ def create_event():
         "title": data.get("title"),
         "venue": data.get("venue"),
         "date": data.get("date"),
+        "time": data.get("time"),
         "month": data.get("month"),
         "theme": data.get("theme"),
         "year": year
@@ -60,6 +61,7 @@ def get_events():
         "id": objectid_to_str(event["_id"]),
         "title": event["title"],
         "venue": event["venue"],
+        "time": event["time"],
         "date": event["date"],
         "month": event["month"],
         "theme": event["theme"],
@@ -74,6 +76,7 @@ def get_event(event_id):
         "id": objectid_to_str(event["_id"]),
         "title": event["title"],
         "venue": event["venue"],
+        "time": event["time"],
         "date": event["date"],
         "month": event["month"],
         "theme": event["theme"]
@@ -86,6 +89,7 @@ def update_event(event_id):
     update_fields = {
         "title": data.get("title"),
         "venue": data.get("venue"),
+        "time": data.get("time"),
         "date": data.get("date"),
         "month": data.get("month"),
         "theme": data.get("theme")
