@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_pymongo import PyMongo
+from datetime import datetime
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
 import os
@@ -7,6 +9,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 app.config["MONGO_URI"] = os.getenv("DATABASE_URL")
 mongo = PyMongo(app)
@@ -53,10 +56,26 @@ def create_event():
         return jsonify({"error": str(e)}), 500
 
 
-# Retrieve all events function
-@app.route("/events", methods=["GET"])
-def get_events():
+# Retrieve all events
+@app.route("/events/all", methods=["GET"])
+def get_all_events():
     events = mongo.db.events_main.find()  # Fetch all events
+    return jsonify([{
+        "id": objectid_to_str(event["_id"]),
+        "title": event["title"],
+        "venue": event["venue"],
+        "time": event["time"],
+        "date": event["date"],
+        "month": event["month"],
+        "theme": event["theme"],
+        "upcoming":event["upcoming"]
+    } for event in events]), 200
+
+# Retrieve events by current month
+@app.route("/events/current_month", methods=["GET"])
+def get_current_month_events():
+    current_month = datetime.now().strftime("%B")
+    events = mongo.db.events_main.find({"month": current_month}).sort("date", 1)
     return jsonify([{
         "id": objectid_to_str(event["_id"]),
         "title": event["title"],
