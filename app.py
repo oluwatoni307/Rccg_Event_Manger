@@ -145,5 +145,24 @@ def delete_event(event_id):
     else:
         return jsonify({"error": "Event not found"}), 404
 
+
+@app.route("/events/upcoming", methods=["GET"])
+def get_upcoming_events():
+    present = datetime.now().date()
+    present_formatted_date = present.strftime("%Y/%m/%d")
+    end_date = present + timedelta(days=10)
+    end_formatted_date = end_date.strftime("%Y/%m/%d")
+    events = mongo.db.events_main.find({"date": {"$gte": present_formatted_date, "$lt": end_formatted_date}})
+    
+    return jsonify([{
+        "id": objectid_to_str(event["_id"]),
+        "title": event["title"],
+        "venue": event["venue"],
+        "time": event["time"],
+        "date": event["date"],
+        "month": event["month"],
+        "theme": event["theme"],
+    } for event in events]), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
