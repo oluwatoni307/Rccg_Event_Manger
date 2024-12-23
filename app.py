@@ -86,20 +86,6 @@ def get_current_month_events():
         "theme": event["theme"],
     } for event in events]), 200
 
-# Retrieve by upcoming field:true
-@app.route("/events/upcoming", methods=["GET"])
-def get_upcoming_events():
-    events = mongo.db.events_main.find({"upcoming": True}).sort("date", 1)
-    
-    return jsonify([{
-        "id": objectid_to_str(event["_id"]),
-        "title": event["title"],
-        "venue": event["venue"],
-        "time": event["time"],
-        "date": event["date"],
-        "month": event["month"],
-        "theme": event["theme"],
-    } for event in events]), 200
 
 # Retrieve an event by id function
 @app.route("/events/<event_id>", methods=["GET"])
